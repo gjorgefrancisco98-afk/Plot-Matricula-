@@ -1,0 +1,12 @@
+# Streamlit secrets
+.streamlit/secrets.toml
+list_models.py
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Venv
+.venv/
+env/
+venv/
