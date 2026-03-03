@@ -53,7 +53,7 @@ with st.sidebar:
     ai_provider = st.selectbox("Provedor de IA", ["Gemini", "OpenAI", "DeepSeek"])
     
     if ai_provider == "Gemini":
-        model_options = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-flash-latest"]
+        model_options = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]
         default_key = st.secrets.get("GEMINI_API_KEY", "")
     elif ai_provider == "OpenAI":
         model_options = ["gpt-4o", "gpt-4o-mini"]
@@ -76,6 +76,11 @@ with st.sidebar:
     if not final_api_key:
         st.warning(f"⚠️ Nenhuma chave {ai_provider} configurada.")
 
+    st.markdown("---")
+    if st.button("🗑️ Limpar Cache da IA", help="Use isso se quiser re-processar o mesmo arquivo."):
+        st.cache_data.clear()
+        st.toast("Cache limpo!")
+        
     st.markdown("---")
     st.markdown("### 📞 Suporte Técnico")
     st.markdown("""
