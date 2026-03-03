@@ -53,8 +53,22 @@ with st.sidebar:
     ai_provider = st.selectbox("Provedor de IA", ["Gemini", "OpenAI", "DeepSeek"])
     
     if ai_provider == "Gemini":
-        model_options = ["gemini-1.5-flash-latest", "gemini-2.0-flash", "gemini-1.5-pro-latest"]
+        model_options = ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-3-flash-preview", "gemini-3.1-flash-lite-preview"]
         default_key = st.secrets.get("GEMINI_API_KEY", "")
+        
+        with st.expander("🔍 Descobrir Modelos"):
+            if st.button("Listar Modelos Disponíveis"):
+                if final_api_key:
+                    try:
+                        import google.generativeai as genai
+                        genai.configure(api_key=final_api_key)
+                        models = [m.name.replace('models/', '') for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+                        st.write(models)
+                    except Exception as e:
+                        st.error(f"Erro ao listar: {str(e)}")
+                else:
+                    st.warning("Insira uma API Key primeiro.")
+
     elif ai_provider == "OpenAI":
         model_options = ["gpt-4o", "gpt-4o-mini"]
         default_key = st.secrets.get("OPENAI_API_KEY", "")
@@ -62,7 +76,9 @@ with st.sidebar:
         model_options = ["deepseek-chat", "deepseek-reasoner"]
         default_key = st.secrets.get("DEEPSEEK_API_KEY", "")
         
-    selected_model = st.selectbox("Modelo", model_options)
+    selected_model_base = st.selectbox("Modelo", model_options)
+    custom_model = st.text_input("Ou digite o nome do modelo manual", placeholder="ex: gemini-1.5-flash-001")
+    selected_model = custom_model if custom_model else selected_model_base
     
     custom_key = st.text_input(
         f"Chave API {ai_provider}", 
