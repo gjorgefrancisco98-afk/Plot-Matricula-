@@ -53,7 +53,7 @@ with st.sidebar:
     ai_provider = st.selectbox("Provedor de IA", ["Gemini", "OpenAI", "DeepSeek"])
     
     if ai_provider == "Gemini":
-        model_options = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]
+        model_options = ["gemini-1.5-flash-latest", "gemini-2.0-flash", "gemini-1.5-pro-latest"]
         default_key = st.secrets.get("GEMINI_API_KEY", "")
     elif ai_provider == "OpenAI":
         model_options = ["gpt-4o", "gpt-4o-mini"]

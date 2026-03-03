@@ -48,6 +48,8 @@ def extract_with_gemini(file_content, mime_type, model_name, api_key):
     try:
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(model_name=model_name, system_instruction=SYSTEM_INSTRUCTION)
+        
+        # O Flash 1.5 e 2.0 suportam response_mime_type="application/json"
         generation_config = genai.GenerationConfig(response_mime_type="application/json")
         
         response = model.generate_content(
@@ -59,8 +61,10 @@ def extract_with_gemini(file_content, mime_type, model_name, api_key):
         error_str = str(e)
         if "429" in error_str:
             st.error("🚫 Limite de cota do Gemini atingido. Aguarde um momento ou use outro provedor/chave.")
+        elif "404" in error_str:
+            st.error(f"❌ Modelo {model_name} não encontrado ou não suportado nesta região/chave.")
         else:
-            st.error(f"Erro no Gemini: {error_str}")
+            st.error(f"Erro no Gemini ({model_name}): {error_str}")
         return None
 
 def extract_with_openai_compatible(file_content, mime_type, model_name, api_key, provider_name, base_url=None):
